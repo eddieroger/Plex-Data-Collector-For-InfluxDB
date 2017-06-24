@@ -7,7 +7,7 @@ import xml.etree.ElementTree as ET
 import time
 from urllib.error import HTTPError, URLError
 # import configparser
-from ConfigParser import SafeConfigParser
+from configparser import SafeConfigParser
 import logging
 import argparse
 import re
@@ -503,7 +503,7 @@ class configManager():
 
         config_file = os.path.join(os.getcwd(), config)
         if os.path.isfile(config_file):
-            self.config = SafeConfigParser()
+            self.config = SafeConfigParser(os.environ)
             self.config.read(config_file)
         else:
             print('ERROR: Unable To Load Config File: {}'.format(config_file))

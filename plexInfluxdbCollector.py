@@ -121,15 +121,23 @@ class plexInfluxdbCollector():
         """
 
         self.send_log('Getting Auth Token For User {}'.format(username), 'info')
+        
+        values = {
+            'user[login]' : username,
+            'user[password]' : password,
+        }
 
-        auth_string = '{}:{}'.format(username, password)
-        base_auth = base64.encodebytes(bytes(auth_string, 'utf-8'))
+        data = urllib.parse.urlencode(values)
+        data = data.encode('ascii') # data should be bytes
+
+        #auth_string = '{}:{}'.format(username, password)
+        #base_auth = base64.encodebytes(bytes(auth_string, 'utf-8'))
         req = Request('https://plex.tv/users/sign_in.json')
         req = self._set_default_headers(req)
-        req.add_header('Authorization', 'Basic {}'.format(base_auth[:-1].decode('utf-8')))
+        #req.add_header('Authorization', 'Basic {}'.format(base_auth[:-1].decode('utf-8')))
 
         try:
-            result = urlopen(req, data=b'').read()
+            result = urlopen(req, data=data).read()
         except HTTPError as e:
             print('Failed To Get Authentication Token')
             if e.code == 401:
